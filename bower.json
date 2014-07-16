@@ -1,0 +1,32 @@
+{
+  "name": "pindrop",
+  "version": "0.0.0",
+  "authors": [
+    "Prateek Saxena <prtksxna@gmail.com>"
+  ],
+  "description": "OSM Micro-contributions",
+  "main": "index.html",
+  "keywords": [
+    "osm",
+    "leaflet",
+    "polymer"
+  ],
+  "license": "MIT",
+  "homepage": "http://github.com/prtksxna/pindrop",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "leaflet-map-component": "~0.1.0",
+    "paper-input": "Polymer/paper-input#~0.3.4",
+    "core-toolbar": "Polymer/core-toolbar#~0.3.4",
+    "core-icon": "Polymer/core-icon#~0.3.4",
+    "paper-fab": "Polymer/paper-fab#~0.3.4",
+    "core-animation": "Polymer/core-animation#~0.3.4",
+    "paper-button": "Polymer/paper-button#~0.3.4"
+  }
+}

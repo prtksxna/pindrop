@@ -1,0 +1,106 @@
+<polymer-element name="pindrop-login">
+  <template>
+    <style>
+     :host {
+       background: #222B30;
+       display: block;
+       width: 100%;
+       margin: 0;
+       padding: 0;
+       overflow: hidden;
+     }
+
+     .container {
+       width: 360px;
+       margin: 0 auto;
+     }
+
+     #logo {
+       display: table;
+       background: #51BB82;
+       color: #fff;
+       margin: 40px 100px;
+       width: 160px;
+       height: 160px;
+       border-radius: 300px;
+       padding: 0;
+       text-align: center;
+     }
+
+     #logo core-icon {
+       display: table-cell;
+       text-align: center;
+       vertical-align: middle;
+     }
+     #logo core-icon svg{
+       margin: 0 auto;
+     }
+
+     paper-input {
+       color: #fff;
+       display: block;
+       width: 300px;
+       margin: 0 auto;
+     }
+
+     paper-input::shadow input {
+       color: #fff;
+     }
+
+     paper-input::shadow .focusedColor {
+       color: #3887BE;
+       border-color: #3887BE;
+       background: #3887BE;
+     }
+
+     #login {
+       display: block;
+       width: 300px;
+       margin: 0 auto;
+       background: #51BB82;
+       color: #fff;
+     }
+
+     #login:hover {
+       background: #51BB82;
+     }
+
+     #login::shadow #ripple {
+       color: #fff;;
+     }
+
+     p {
+       font-size: 11px;
+       color: #fff;
+       text-align: center;
+       margin-top: 20px;
+     }
+
+     a {
+       color: #3887be;
+     }
+    </style>
+
+    <div class="container">
+      <div id="logo">
+	<core-icon size="100" icon="maps:place"></core-icon>
+      </div>
+
+      <paper-input label="Username" floatingLabel></paper-input>
+      <paper-input label="Password" type="password" floatingLabel></paper-input>
+      <paper-button id="login" label="Login" raisedButton></paper-button>
+      <p>
+	<a href="https://www.openstreetmap.org/user/forgot-password">Forgot Password?</a>
+	or
+	<a href="https://www.openstreetmap.org/user/new?referer=%2F">Create an account</a>
+      </p>
+    </div>
+
+  </template>
+  <script>
+   Polymer( 'pindrop-login', {
+     ready: function () {
+     }
+   } );
+  </script>
+</polymer-element>

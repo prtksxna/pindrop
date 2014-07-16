@@ -1,0 +1,11 @@
+{
+  "name": "core-icon",
+  "private": true,
+  "dependencies": {
+    "core-iconset": "Polymer/core-iconset#~0.3.4",
+    "core-icons": "Polymer/core-icons#~0.3.4",
+    "core-iconset-svg": "Polymer/core-iconset-svg#~0.3.4",
+    "core-icon": "Polymer/core-icon#~0.3.4",
+    "paper-fab": "Polymer/paper-fab#~0.3.4"
+  }
+}
