@@ -27,6 +27,7 @@
     "core-icon": "Polymer/core-icon#~0.3.4",
     "paper-fab": "Polymer/paper-fab#~0.3.4",
     "core-animation": "Polymer/core-animation#~0.3.4",
-    "paper-button": "Polymer/paper-button#~0.3.4"
+    "paper-button": "Polymer/paper-button#~0.3.4",
+    "paper-toast": "Polymer/paper-toast#~0.3.4"
   }
 }

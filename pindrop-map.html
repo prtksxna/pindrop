@@ -1,0 +1,60 @@
+<polymer-element name="pindrop-map">
+  <template>
+    <style>
+     leaflet-map {
+       position: absolute;
+       top: 0;
+       width: 100%;
+       height: 100%;
+       z-index: 0;
+     }
+     core-toolbar {
+       z-index: 2;
+       background: #222b30;
+       color: #fff;
+     }
+     #logo {
+       color: #51bb82;
+     }
+     paper-fab {
+       background: #51bb82;
+       color: #fff;
+       z-index: 3;
+       position: fixed;
+       bottom: 30px;
+       right: 30px;
+     }
+     leaflet-map::shadow .leaflet-control-zoom {
+       display: none;
+     }
+    </style>
+
+    <core-toolbar>
+      <core-icon id="logo" icon="maps:place"></core-icon>
+      <div flex>Pin Drop</div>
+      <core-icon icon="exit-to-app"></core-icon>
+    </core-toolbar>
+    <paper-fab icon="add"></paper-fab>
+    <leaflet-map id="map" latitude="51.4800" longitude="0"></leaflet-map>
+    <paper-toast id="getting_location" text="Getting current location…"></paper-toast>
+    <paper-toast id="failed_location" text="Failed to get current location."></paper-toast>
+  </template>
+  <script>
+   Polymer( 'pindrop-map', {
+     ready: function () {
+       var map = this.$.map;
+       failed_location = this.$.failed_location;
+       this.$.getting_location.show();
+       navigator.geolocation.getCurrentPosition( function ( d ) {
+	 var c = d.coords;
+	 console.log( d, map );
+	 map.setAttribute( 'latitude', c.latitude );
+	 map.setAttribute( 'zoom', '15' );
+	 map.setAttribute( 'longitude', c.longitude );
+       }, function ( e ) {
+	 failed_location.show();
+       }, { enableHighAccuracy: true } );
+     }
+   } );
+  </script>
+</polymer-element>
