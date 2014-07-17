@@ -16,7 +16,9 @@
      #logo {
        color: #51bb82;
      }
-     paper-fab {
+
+     #add {
+       transition: all 1.25s ease;
        background: #51bb82;
        color: #fff;
        z-index: 3;
@@ -24,34 +26,78 @@
        bottom: 30px;
        right: 30px;
      }
-     leaflet-map::shadow .leaflet-control-zoom {
+
+     leaflet-map::shadow .leaflet-control-zoom, leaflet-map::shadow .leaflet-control {
        display: none;
      }
     </style>
 
-    <core-toolbar>
+    <core-toolbar id="toolbar">
       <core-icon id="logo" icon="maps:place"></core-icon>
       <div flex>Pin Drop</div>
+      <core-icon id="gpsicon" on-click="{{getCurrentLocation}}" icon="device:gps-not-fixed"></core-icon>
       <core-icon icon="exit-to-app"></core-icon>
     </core-toolbar>
-    <paper-fab icon="add"></paper-fab>
-    <leaflet-map id="map" latitude="51.4800" longitude="0"></leaflet-map>
+
+    <paper-fab id="add" icon="add" on-click="{{addPoint}}"></paper-fab>
+
+    <leaflet-map id="map" latitude="51.4800" longitude="0">
+      <leaflet-circle id="accuracy" latitude="51.4800" longitude="0"></leaflet-circle>
+      <leaflet-marker id="point" latitude="51.4800" longitude="0"></leaflet-marker>
+    </leaflet-map>
+
     <paper-toast id="getting_location" text="Getting current location…"></paper-toast>
     <paper-toast id="failed_location" text="Failed to get current location."></paper-toast>
+
   </template>
   <script>
    Polymer( 'pindrop-map', {
+     addPoint: function () {
+       this.$.map.map.setView( this.$.point.feature.getLatLng() );
+       window.setTimeout( function () {
+	 this.$.map.map.panBy( [ 0, -128 ] );
+       }.bind( this ), 1000 );
+       this.$.toolbar.className = 'tall';
+       this.$.add.style.top = '162px';
+       this.$.add.setAttribute( 'icon', 'check' );
+     },
+
      ready: function () {
+       this.$.add.style.top = this.$.add.offsetTop + 'px'; // For CSS transition
+       this.getCurrentLocation();
+     },
+
+     getCurrentLocation: function () {
        var map = this.$.map;
-       failed_location = this.$.failed_location;
+       var failed_location = this.$.failed_location;
+       var accuracy = this.$.accuracy;
+       var point = this.$.point;
+       var gpsicon = this.$.gpsicon;
+       gpsicon.setAttribute( 'icon', 'device:gps-not-fixed' );
+
        this.$.getting_location.show();
        navigator.geolocation.getCurrentPosition( function ( d ) {
 	 var c = d.coords;
-	 console.log( d, map );
-	 map.setAttribute( 'latitude', c.latitude );
-	 map.setAttribute( 'zoom', '15' );
-	 map.setAttribute( 'longitude', c.longitude );
+
+	 accuracy.setAttribute( 'latitude', c.latitude );
+	 accuracy.setAttribute( 'longitude', c.longitude );
+	 accuracy.setAttribute( 'radius', c.accuracy );
+
+	 point.setAttribute( 'latitude', c.latitude );
+	 point.setAttribute( 'longitude', c.longitude );
+
+	 gpsicon.setAttribute( 'icon', 'device:gps-fixed' );
+	 point.feature.dragging.enable();
+
+	 // Hack to get updated information 
+	 // tombatossals/angular-leaflet-directive#300
+	 window.setTimeout( function () {
+		 map.map.fitBounds( accuracy.feature.getBounds() );
+	 }, 1000 );
+
        }, function ( e ) {
+	 point.feature.dragging.enable();
+	 gpsicon.setAttribute( 'icon', 'device:gps-off' );
 	 failed_location.show();
        }, { enableHighAccuracy: true } );
      }
