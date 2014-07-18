@@ -8,17 +8,36 @@
        height: 100%;
        z-index: 0;
      }
+
      core-toolbar {
+       transition: all 1s ease;
        z-index: 2;
        background: #222b30;
        color: #fff;
      }
+
+     core-toolbar > div.middle {
+       transition: all 1s ease;
+       opacity: 0;
+     }
+
+     core-toolbar.tall {
+       height: 281px;
+     }
+
+     core-toolbar.tall > div.middle {
+       transition: all 1s ease;
+       opacity: 1;
+       margin-top: 100px;
+       margin-left: 46px;
+     }
+
      #logo {
        color: #51bb82;
      }
 
      #add {
-       transition: all 1.25s ease;
+       transition: all 1s ease;
        background: #51bb82;
        color: #fff;
        z-index: 3;
@@ -30,13 +49,46 @@
      leaflet-map::shadow .leaflet-control-zoom, leaflet-map::shadow .leaflet-control {
        display: none;
      }
+
+     #gpsicon, #logout {
+       transition: all 1s ease;
+       opacity: 1;
+     }
+
+     paper-input {
+       color: #fff;
+       display: block;
+       width: 250px;
+       margin: 0 auto;
+     }
+
+     paper-input::shadow #label {
+       font-size: 16px;
+       padding-top: 20px;
+     }
+
+     paper-input::shadow input {
+       color: #fff;
+     }
+
+     paper-input::shadow .focusedColor {
+       color: #3887BE;
+       border-color: #3887BE;
+       background: #3887BE;
+     }
+
     </style>
 
     <core-toolbar id="toolbar">
       <core-icon id="logo" icon="maps:place"></core-icon>
       <div flex>Pin Drop</div>
       <core-icon id="gpsicon" on-click="{{getCurrentLocation}}" icon="device:gps-not-fixed"></core-icon>
-      <core-icon icon="exit-to-app"></core-icon>
+      <core-icon id="logout" icon="exit-to-app"></core-icon>
+
+      <div class="middle indent">
+	<paper-input label="Name" floatingLabel></paper-input><br>
+	<paper-input label="Feature Type" floatingLabel></paper-input>
+      </div>
     </core-toolbar>
 
     <paper-fab id="add" icon="add" on-click="{{addPoint}}"></paper-fab>
@@ -56,10 +108,14 @@
        this.$.map.map.setView( this.$.point.feature.getLatLng() );
        window.setTimeout( function () {
 	 this.$.map.map.panBy( [ 0, -128 ] );
-       }.bind( this ), 1000 );
+       }.bind( this ), 500 );
        this.$.toolbar.className = 'tall';
-       this.$.add.style.top = '162px';
+       this.$.add.style.top = '253px';
        this.$.add.setAttribute( 'icon', 'check' );
+       this.$.logo.setAttribute( 'icon', 'chevron-left' );
+       this.$.logo.style.color = '#fff';
+       this.$.gpsicon.style.opacity = '0';
+       this.$.logout.style.opacity = '0';
      },
 
      ready: function () {
