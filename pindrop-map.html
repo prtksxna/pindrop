@@ -86,7 +86,7 @@
       <core-icon id="logout" icon="exit-to-app"></core-icon>
 
       <div class="middle indent">
-	<paper-input label="Name" floatingLabel></paper-input><br>
+	<paper-input id="location_name" label="Name" floatingLabel></paper-input><br>
 	<paper-input label="Feature Type" floatingLabel></paper-input>
       </div>
     </core-toolbar>
@@ -106,14 +106,12 @@
   <script>
    Polymer( 'pindrop-map', {
      addPoint: function () {
-       window.setTimeout( function () {
-	 this.$.map.map.setView( this.$.point.feature.getLatLng() );
-	 window.setTimeout( function () {
-	   this.$.map.map.panBy( [ 0, -153 ] );
-	   this.$.map.map.dragging.disable();
-	   this.$.point.feature.dragging.disable();
-	 }.bind( this ), 500 );
-       }.bind( this ), 1000 );
+       this.$.map.map.fitBounds( [ this.$.point.feature.getLatLng() ] );
+       this.$.map.map.panBy( [ 0, -153 ], { animate: false } );
+       this.$.map.map.dragging.disable();
+       this.$.map.map.touchZoom.disable();
+       this.$.point.feature.dragging.disable();
+
        this.$.toolbar.className = 'tall';
        this.$.add.style.top = '253px';
        this.$.add.setAttribute( 'icon', 'check' );
