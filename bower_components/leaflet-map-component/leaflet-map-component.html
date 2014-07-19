@@ -112,6 +112,7 @@ The `leaflet-map` element renders a [Leaflet](http://leafletjs.com/) map.
        var lat = this.latitude;
        var lon = this.longitude;
        var zoom = this.zoom;
+       L.Icon.Default.imagePath = '/bower_components/leaflet/dist/images'
 
        this.map = new L.Map( this.$.map , {
          center: new L.LatLng( this.latitude, this.longitude ),

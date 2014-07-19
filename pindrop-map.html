@@ -96,6 +96,7 @@
     <leaflet-map id="map" latitude="51.4800" longitude="0">
       <leaflet-circle id="accuracy" latitude="51.4800" longitude="0"></leaflet-circle>
       <leaflet-marker id="point" latitude="51.4800" longitude="0"></leaflet-marker>
+
     </leaflet-map>
 
     <paper-toast id="getting_location" text="Getting current location…"></paper-toast>
@@ -107,7 +108,9 @@
      addPoint: function () {
        this.$.map.map.setView( this.$.point.feature.getLatLng() );
        window.setTimeout( function () {
-	 this.$.map.map.panBy( [ 0, -128 ] );
+	 this.$.map.map.panBy( [ 0, -153 ] );
+	 this.$.map.map.dragging.disable();
+	 this.$.point.feature.dragging.disable();
        }.bind( this ), 500 );
        this.$.toolbar.className = 'tall';
        this.$.add.style.top = '253px';
