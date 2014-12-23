@@ -30,10 +30,8 @@ The `leaflet-map` element renders a [Leaflet](http://leafletjs.com/) map.
 <link rel="import" href="leaflet-import.html">
 <link rel="import" href="leaflet-marker-component.html">
 <link rel="import" href="leaflet-circle-component.html">
-<link rel="import" href="leaflet-polyline-component.html">
-<link rel="import" href="leaflet-polygon-component.html">
 
-<polymer-element name="leaflet-map" attributes="tileServer latitude longitude zoom fitToMarkers">
+<polymer-element name="leaflet-map" attributes="tileServer latitude longitude zoom">
   <template>
     <style>
      :host {
@@ -51,32 +49,33 @@ The `leaflet-map` element renders a [Leaflet](http://leafletjs.com/) map.
     </style>
     <link rel="stylesheet" href="../leaflet/dist/leaflet.css">
     <div id="map"></div>
-    <content id="features" select="leaflet-marker, leaflet-circle, leaflet-polyline, leaflet-polygon"></content>
+    <content id="markers" select="leaflet-marker"></content>
+    <content id="circles" select="leaflet-circle"></content>
   </template>
   <script>
    Polymer( 'leaflet-map', {
      publish: {
        /**
         * The map's latitude coordinate.
-        *
+	*
         * @attribute latitude
         * @type number
-        * @default 0
+	* @default null
         */
-       latitude: { value: 0, reflect: true },
+       latitude: { value: null, reflect: true },
 
        /**
         * The map's longitude coordinate.
-        *
+	*
         * @attribute longitude
         * @type number
-        * @default 0
+        * @default null
         */
-       longitude: { value: 0, reflect: true },
+       longitude: { value: null, reflect: true },
 
        /**
         * The map's zoom level
-        *
+	*
         * @attribute zoom
         * @type number
         * @default 10
@@ -84,23 +83,14 @@ The `leaflet-map` element renders a [Leaflet](http://leafletjs.com/) map.
        zoom: { value: 10, reflect: true }
      },
 
-     /**
-      * The map's tile server URL
-      *
-      * @attribute tileServer
-      * @type string
-      * @default http://{s}.tile.osm.org/{z}/{x}/{y}.png
-      */
+      /**
+       * The map's tile server URL
+       *
+       * @attribute tileServer
+       * @type string
+       * @default http://{s}.tile.osm.org/{z}/{x}/{y}.png
+       */
      tileServer: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-
-     /**
-      * If set, the map is zoomed such that all elements in it are visible
-      *
-      * @attribute fitToMarkers
-      * @type boolean
-      * @default false
-      */
-     fitToMarkers: false,
 
      observe: {
        latitude: 'updateCenter',
@@ -112,7 +102,6 @@ The `leaflet-map` element renders a [Leaflet](http://leafletjs.com/) map.
        var lat = this.latitude;
        var lon = this.longitude;
        var zoom = this.zoom;
-       L.Icon.Default.imagePath = 'bower_components/leaflet/dist/images'
 
        this.map = new L.Map( this.$.map , {
          center: new L.LatLng( this.latitude, this.longitude ),
@@ -122,26 +111,12 @@ The `leaflet-map` element renders a [Leaflet](http://leafletjs.com/) map.
 
        this.map.on( 'zoomend', function ( event ) {
          this.zoom = event.target.getZoom();
-
-         /**
-          * Fired when the map has stopped [zooming](http://leafletjs.com/reference.html#map-zoomend)
-          *
-          * @event zoomened
-          */
-         this.fire( 'zoomend' );
        }.bind( this ) );
 
-       this.map.on( 'moveend', function ( event ) {
+       this.map.on( 'dragend', function ( event ) {
          var center = event.target.getCenter();
          this.latitude = center.lat;
          this.longitude = center.lng;
-
-         /**
-          * Fired when the map has stopped [moving](http://leafletjs.com/reference.html#map-moveend)
-          *
-          * @event moveend
-          */
-         this.fire( 'moveend' );
        }.bind( this ) );
 
        this.updateFeatures();
@@ -160,60 +135,24 @@ The `leaflet-map` element renders a [Leaflet](http://leafletjs.com/) map.
      },
 
      updateFeatures: function () {
-       this.features = Array.prototype.slice.call( this.$.features.getDistributedNodes() );
+       this.markers = Array.prototype.slice.call( this.$.markers.getDistributedNodes() );
+       this.circles = Array.prototype.slice.call( this.$.circles.getDistributedNodes() );
 
        this.onMutation( this, this.updateFeatures );
 
-       if ( this.features.length && this.map ) {
-         for ( var i = 0, f; f = this.features[i]; i++ ) {
-           f.map = this.map;
+       if ( this.markers.length && this.map ) {
+         for ( var i = 0, m; m = this.markers[i]; i++ ) {
+           m.map = this.map;
          }
        }
-     },
 
-     fitToMarkersChanged: function () {
-       if ( this.map && this.fitToMarkers) {
-         var bounds = [];
-         for( var i = 0, f; f = this.features[i]; i++ ) {
-           if ( f.latitude && f.longitude ) {
-             bounds.push( [ f.latitude, f.longitude ] );
-           }
-         }
-         if ( bounds.length > 0 ) {
-           this.map.fitBounds( bounds );
-           this.map.invalidateSize();
+       if ( this.circles.length && this.map ) {
+         for ( var i = 0, c; c = this.circles[i]; i++ ) {
+           c.map = this.map;
          }
        }
-     },
 
-     /**
-      * Clears all elements from the map
-      *
-      * @method clear
-      */
-     clear: function () {
-       for( var i = 0, f; f = this.features[i]; i++ ) {
-         this.map.removeLayer( f.feature );
-         f.map = null;
-       }
-     },
-
-     /**
-      * Returns a GeoJSON including all the features of the map
-      *
-      * @method toGeoJSON
-      */
-     toGeoJSON: function () {
-       var geoJSON = {
-         "type": "FeatureCollection",
-         "features": []
-       };
-
-       for( var i = 0, f; f = this.features[i]; i++ ) {
-         geoJSON.features.push( f.feature.toGeoJSON() );
-       }
-
-       return geoJSON;
+       // Fit to bounds
      }
    } );
   </script>

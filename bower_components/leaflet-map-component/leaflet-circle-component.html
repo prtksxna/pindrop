@@ -1,21 +1,3 @@
-<!--
-The `leaflet-circle` element represents a circle on the map and is used as
-a child element of the `leaflet-map` element.
-
-
-##### Example: Add circles
-    <leaflet-map longitude="77.2" latitude="28.4" zoom="12">
-      <leaflet-circle longitude="77.2" latitude="28.4" radius="300">
-        Circle
-      </leaflet-circle>
-    </leaflet-map>
-
-@element leaflet-circle
-@blurb Element for putting a circle on the map
-@status alpha
-@homepage http://prtksxna.github.io/leaflet-map-component/components/leaflet-map-component/
--->
-
 <link rel="import" href="leaflet-import.html">
 
 <polymer-element name="leaflet-circle" attributes="latitude longitude radius">
@@ -26,51 +8,22 @@ a child element of the `leaflet-map` element.
   </template>
   <script>
    Polymer( 'leaflet-circle', {
-     /**
-      * A Leaflet circle object
-      *
-      * @property feature
-      * @type L.circle
-      * @default null
-      */
-     feature: null,
-
-     /**
-      * A Leaflet map object
-      *
-      * @property map
-      * @type L.map
-      * @default null
-      */
+     circle: null,
      map: null,
 
      publish: {
-       /**
-	* The circle's longitude coordinate
-	*
-	* @attribute longitude
-	* @type number
-	* @default null
-	*/
-       longitude: { value: null, reflect: true },
-
-       /**
-	* The circle's latitude coordinate
-	*
-	* @attribute latitude
-	* @type number
-	* @default null
-	*/
-       latitude: { value: null, reflect: true },
-
-       /**
-	* The circle's radius is metres
-	*
-	* @attribute radius
-	* @type number
-	* @default 100
-	*/
-       radius: { value: 100, reflect: true }
+       longitude: {
+         value: null,
+         reflect: true
+       },
+       latitude: {
+         value: null,
+         reflect: true
+       },
+       radius: {
+         value: null,
+         reflect: true
+       }
      },
 
      observe: {
@@ -89,30 +42,28 @@ a child element of the `leaflet-map` element.
 
      mapReady: function () {
        if ( this.latitude && this.longitude && this.map ) {
-         this.feature = L.circle( [this.latitude, this.longitude], this.radius, this.pathOptions );
-         this.feature.addTo( this.map );
+         this.circle = L.circle( [this.latitude, this.longitude], this.radius, this.pathOptions );
+         this.circle.addTo( this.map );
          this.contentChanged();
        }
      },
 
      updatePosition: function () {
-       if ( this.feature && this.latitude != null && this.longitude != null ) {
-         this.feature.setLatLng( L.latLng( this.latitude, this.longitude ) );
+       if ( this.circle && this.latitude != null && this.longitude != null ) {
+         this.circle.setLatLng( L.latLng( this.latitude, this.longitude ) );
        }
      },
 
      updateRadius: function () {
-       if ( this.feature && this.radius != null ) {
-         this.feature.setRadius( this.radius );
+       if ( this.circle && this.radius != null ) {
+         this.circle.setRadius( this.radius );
        }
      },
 
      contentChanged: function () {
        this.onMutation( this, this.contentChanged );
        var content = this.innerHTML;
-       if ( content !== '' ) {
-	 this.feature.bindPopup( content );
-       }
+       this.circle.bindPopup( content );
      }
    } );
   </script>

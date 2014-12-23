@@ -9,7 +9,6 @@
   "keywords": [
     "polymer",
     "web-component",
-    "web-components",
     "osm",
     "map",
     "leaflet"
@@ -18,11 +17,7 @@
   "homepage": "http://github.io/prtksxna/leaflet-map-component",
   "ignore": [
     "**/.*",
-    "tests",
-    "demo_files",
-    "demo.html",
-    "index.html",
-    "CONTRIBUTING.md"
+    "tests"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#~0.3.3",
